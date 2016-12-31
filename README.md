@@ -43,7 +43,7 @@ Best of luck!
     you just need to hook it up to your own data model.
 - Fix styling... what looks good to you?
 - Hovering over a search result thumbnail should play a GIF preview.
-- Cleanup GifDropzones:
+- Cleanup GifDisplays:
   - image should stretch to fit the frame
   - should be arranged in a 2x2 grid, 200px row height.
 - Do something cool! Anything you like! Just have fun with it.

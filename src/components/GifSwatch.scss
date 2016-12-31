@@ -1,0 +1,31 @@
+@import './src/helpers.scss';
+
+.GifSwatch {
+  position: relative;
+  background: $background-highlight-color;
+  margin-bottom: $basic-space;
+}
+
+.GifSwatch-dragging {
+  opacity: .5;
+  z-index: 3;
+}
+
+.GifSwatch_image, .GifSwatch_secondImage {
+  width: 100%;
+}
+
+.GifSwatch_secondImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.GifSwatch_image {
+  position: relative;
+  z-index: 2;
+
+  &:hover {
+    opacity: 0;
+  }
+}

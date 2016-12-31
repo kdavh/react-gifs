@@ -1,0 +1,17 @@
+@import "./src/helpers.scss";
+
+.GifDisplay {
+  position: relative;
+  max-width: 100%;
+  margin-bottom: $basic-space;
+  background-color: $main-color;
+  text-align: center;
+}
+
+.GifDisplay-highlighted {
+  opacity: 0.5;
+}
+
+.GifDisplay_image {
+  max-width: 100%;
+}

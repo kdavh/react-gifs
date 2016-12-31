@@ -1,60 +1,105 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
+import { debounce } from 'lodash';
 
 import urls from '../constants/urls';
 import GifSwatch from './GifSwatch';
-import GifDropzone from './GifDropzone';
-import mockResponse from '../constants/mockResponse';
+import GifDisplay from './GifDisplay';
+import logoSvg from '../../static/images/logo.svg';
+import GiphyApi from '../services/GiphyApi';
+import './App.scss'
 
-import './App.scss';
+const DEFAULT_SEARCH = "monkey pie";
+const DEFAULT_CHOSEN_GIFS = [
+  "https://media.giphy.com/media/13p77tfexyLtx6/giphy.gif",
+  "https://media.giphy.com/media/iLqpYAbKGOrqU/giphy.gif",
+  "https://media.giphy.com/media/8ytDUrlW9JbG0/giphy.gif",
+  "https://media.giphy.com/media/PekRU0CYIpXS8/giphy.gif"
+].map(url => ({ url: url, id: url }));
+const SEARCH_DELAY = 200;
+const MAX_SEARCH_RESULTS = 10;
 
 @DragDropContext(HTML5Backend)
 export class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      gifResults: [],
+      chosenGifs: DEFAULT_CHOSEN_GIFS
+    }
+  }
 
-  renderSwatch(r) {
-    const props = {
-      key: r.id,
-      id: r.id,
-      thumbnailUrl: r.images.fixed_height_small_still.url,
-    };
-    return (<GifSwatch {...props} />);
+  componentDidMount() {
+    this.fetchResults(DEFAULT_SEARCH)
   }
 
   render() {
-    let logoUrl = require('../../static/images/logo.svg');
-
-    // TODO connect results to search box and giphy API
-    let resultSwatches = mockResponse.data.map(::this.renderSwatch);
     return (
       <div className="App">
-        <header className="masthead">
+        <header className="App_masthead">
           <h1>
             <a href="/">
-              <img src={logoUrl} height={36} />
-              &nbsp;
-              <span>Gifs</span>
+              <img className="App_mastheadImage" src={logoSvg} />
+              <span className="App_mastheadLink">Gifs</span>
             </a>
           </h1>
         </header>
-        <div className="content-container">
-          <main className="main">
-            <GifDropzone src="https://media.giphy.com/media/13p77tfexyLtx6/giphy.gif"/>
-            <GifDropzone src="https://media.giphy.com/media/iLqpYAbKGOrqU/giphy.gif"/>
-            <GifDropzone src="https://media.giphy.com/media/8ytDUrlW9JbG0/giphy.gif"/>
-            <GifDropzone src="https://media.giphy.com/media/PekRU0CYIpXS8/giphy.gif"/>
-          </main>
-          <aside className="sidebar">
-            <input className="search-input" name="search" placeholder="Search" />
-            { resultSwatches }
+
+        <div className="App_content">
+          <aside className="App_aside">
+            <input
+              className="App_searchInput"
+              onChange={::this.onSearchChange}
+              name="search"
+              placeholder="Search" />
+            { this.state.gifResults.map((gif) => (
+              <GifSwatch key={gif.id} gif={gif} />
+            ))}
+
           </aside>
+          <main className="App_main">
+            { this.state.chosenGifs.map((gif, i) => (
+              <GifDisplay
+                gif={gif}
+                key={gif.id}
+                onDrop={gif => this.replaceChosen(i, gif)} />
+            )) }
+          </main>
         </div>
-        <footer className="footer">
-          {<a href={urls.claraHomepage} target="_blank">About Clara</a>}
+
+        <footer className="App_footer">
+          <a href={urls.claraHomepage} target="_blank">About Clara</a>
           {' | '}
-          {<a href={urls.claraCareers} target="_blank">Work at Clara</a>}
+          <a href={urls.claraCareers} target="_blank">Work at Clara</a>
         </footer>
       </div>
     );
+  }
+
+  onSearchChange(event) {
+    clearTimeout(this.SearchDoneTimeout);
+    let search = event.target.value || "";
+
+    this.SearchDoneTimeout = setTimeout(() =>
+      this.fetchResults(search)
+    , SEARCH_DELAY)
+  }
+
+  fetchResults(keywords) {
+    GiphyApi.search(keywords)
+      .then(gifs => this.setState({
+        gifResults: gifs.slice(0, MAX_SEARCH_RESULTS)
+      }))
+  }
+
+  replaceChosen(i, newGif) {
+    let currentChosen = this.state.chosenGifs;
+    if (currentChosen.find(gif => gif.id === newGif.id)) {
+      return;
+    }
+    currentChosen[i] = newGif;
+
+    this.setState({ chosenGifs: currentChosen });
   }
 }
