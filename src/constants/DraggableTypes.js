@@ -1,4 +1,4 @@
 const DraggableTypes = {
-  GIF: Symbol("GIF")
+  GIF: "GIF"
 }
 export default DraggableTypes;

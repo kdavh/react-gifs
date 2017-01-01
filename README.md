@@ -9,10 +9,10 @@
 
 1. Make drag and drop actually work with touch devices.
 2. Add tests.
-3. Figure out a more convenient interface to look at search results next to chosen gifs, maybe just independently scroll?
-4. Add Redux or Flux.  The data management needed is just at the point where they would start to be beneficial.
-5. Make the site look truly good.
-6. Do some linting.
+3. Update packages! So many deprecation warnings...
+3. Test in other browsers besides Chrome.
+3. Add Redux or Flux.  The data management needed is just at the point where they would start to be beneficial.
+3. Do some linting.
 
 
 

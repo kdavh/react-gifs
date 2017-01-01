@@ -53,9 +53,11 @@ export class App extends Component {
               onChange={::this.onSearchChange}
               name="search"
               placeholder="Search" />
-            { this.state.gifResults.map((gif) => (
-              <GifSwatch key={gif.id} gif={gif} />
-            ))}
+            <div className="App_searchResults">
+              { this.state.gifResults.map((gif) => (
+                <GifSwatch key={gif.id} gif={gif} />
+              ))}
+            </div>
 
           </aside>
           <main className="App_main">

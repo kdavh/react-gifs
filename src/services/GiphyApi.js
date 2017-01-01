@@ -18,7 +18,7 @@ const GiphyApi = {
   _processResult: function(result) {
     return {
       id: result.id,
-      thumbnailStillUrl: result.images.fixed_height_small_still.url,
+      thumbnailStillUrl: result.images.fixed_height_still.url,
       thumbnailUrl: result.images.downsized.url,
       url: result.images.original.url
     }

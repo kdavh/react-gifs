@@ -1,10 +1,10 @@
-$main-color: #333;
+$main-color: #666;
 $background-highlight-color: #eee;
 
 $basic-space: 10px;
 $special-space: 20px;
 
-$media-mobile-max: 520px;
+$media-mobile-max: 600px;
 
 @mixin media($media) {
   @if $media == mobile {

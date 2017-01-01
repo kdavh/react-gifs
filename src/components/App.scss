@@ -27,6 +27,11 @@
 }
 
 .App_main {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: space-between;
+
   width: 50%;
   background-color: $background-highlight-color;
 
@@ -42,6 +47,11 @@
     width: 30%;
     padding-right: $special-space;
   }
+}
+
+.App_searchResults {
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .App_footer {
