@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import { debounce } from 'lodash';
@@ -7,8 +8,8 @@ import urls from '../constants/urls';
 import GifSwatch from './GifSwatch';
 import GifDisplay from './GifDisplay';
 import logoSvg from '../../static/images/logo.svg';
-import GiphyApi from '../services/GiphyApi';
 import './App.scss'
+import { updateSearch } from '../actionCreators'
 
 const DEFAULT_SEARCH = "monkey pie";
 const DEFAULT_CHOSEN_GIFS = [
@@ -20,18 +21,22 @@ const DEFAULT_CHOSEN_GIFS = [
 const SEARCH_DELAY = 200;
 const MAX_SEARCH_RESULTS = 10;
 
+function mapStateToProps(state) {
+  return state;
+}
+
 @DragDropContext(HTML5Backend)
+@connect(mapStateToProps)
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gifResults: [],
       chosenGifs: DEFAULT_CHOSEN_GIFS
     }
   }
 
   componentDidMount() {
-    this.fetchResults(DEFAULT_SEARCH)
+    this.props.dispatch(updateSearch(DEFAULT_SEARCH))
   }
 
   render() {
@@ -54,7 +59,7 @@ export class App extends Component {
               name="search"
               placeholder="Search" />
             <div className="App_searchResults">
-              { this.state.gifResults.map((gif) => (
+              { this.props.gifResults.map((gif) => (
                 <GifSwatch key={gif.id} gif={gif} />
               ))}
             </div>
@@ -84,15 +89,8 @@ export class App extends Component {
     let search = event.target.value || "";
 
     this.SearchDoneTimeout = setTimeout(() =>
-      this.fetchResults(search)
+      this.props.dispatch(updateSearch(search))
     , SEARCH_DELAY)
-  }
-
-  fetchResults(keywords) {
-    GiphyApi.search(keywords)
-      .then(gifs => this.setState({
-        gifResults: gifs.slice(0, MAX_SEARCH_RESULTS)
-      }))
   }
 
   replaceChosen(i, newGif) {
@@ -104,4 +102,8 @@ export class App extends Component {
 
     this.setState({ chosenGifs: currentChosen });
   }
+}
+
+App.defaultProps = {
+  gifResults: []
 }
